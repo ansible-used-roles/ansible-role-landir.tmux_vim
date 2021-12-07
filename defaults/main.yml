@@ -1,0 +1,10 @@
+---
+# defaults file for ansible-role-landir.tmux_vim
+vim_user_home: "{{ ansible_user_dir }}"
+vim_vundle_repo: "https://github.com/VundleVim/Vundle.vim.git"
+vim_vundle_dest: "{{ vim_user_home }}/.vim/bundle/Vundle.vim"
+vim_vimrc_src: "vimrc.j2"
+vim_vimrc_dest: "{{ vim_user_home }}/.vimrc"
+tmux_user_home: "{{ ansible_user_dir }}"
+tmux_conf_src: "tmux.conf.j2"
+tmux_conf_dest: "{{ tmux_user_home }}/.tmux.conf"

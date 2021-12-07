@@ -1,0 +1,228 @@
+if version >= 500
+" let g:solarized_termcolors=256
+syntax on
+set background=dark
+
+set mouse=a
+
+"""""""""""""""""""""""""""""""""
+" Vundle
+"""""""""""""""""""""""""""""""""
+set nocompatible
+filetype off
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+"
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+" Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/syntastic'
+" Plugin 'rodjek/vim-puppet'
+" Plugin 'godlygeek/tabular'
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'
+Plugin 'honza/vim-snippets'
+Plugin 'StanAngeloff/php.vim'
+Plugin 'vim-scripts/bash-support.vim'
+Plugin 'mattn/emmet-vim'
+Plugin 'chase/vim-ansible-yaml'
+" Plugin 'Valloric/YouCompleteMe'
+" Plugin 'altercation/vim-colors-solarized'
+Plugin 'mattsacks/vim-eddie'
+Plugin 'rainux/vim-desert-warm-256'
+Plugin 'ervandew/supertab'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'ConradIrwin/vim-bracketed-paste'
+
+call vundle#end()
+
+
+filetype plugin indent on
+
+set t_Co=256
+
+try
+        " Set colorscheme
+        colorscheme desert-warm-256
+        " Set airline theme
+        let g:airline_theme="luna"
+catch /^Vim\%((\a\+)\)\=:E185/
+        " deal with it
+endtry
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use spaces instead of tabs
+set expandtab
+
+" Be smart when using tabs ;)
+set smarttab
+
+" 1 tab == 4 spaces
+set shiftwidth=2
+set tabstop=2
+
+" Linebreak on 500 characters
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+" Uncomment if you have patched fonts
+" let g:airline_powerline_fonts = 1
+
+" Format the status line
+" set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
+
+""""""""""""""""
+" Syntastic
+""""""""""""""""
+" let g:syntastic_enable_signs=1
+" let g:syntastic_quiet_messages = {'level': 'warnings'}
+" let g:syntastic_auto_loc_list=1
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_python_python_exec = '/usr/bin/python'
+
+""""""""""""""""""""""""""""""
+" General
+""""""""""""""""""""""""""""""
+set history=1000  " Store a ton of history (default is 20)
+set spell
+scriptencoding utf-8
+set backup 	" backups are nice ...
+set undofile	" so is persistent undo ...
+set undolevels=1000  "maximum number of changes that can be undone
+set undoreload=10000  "maximum number lines to save for undo on a buffer reload
+"set showmode    " display the current mode
+set nu	" Line numbers on
+
+" Remove trailing whitespaces and ^M chars
+" autocmd FileType c,cpp,java,php,js,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+
+
+
+
+syntax enable
+" Search down into subfolders
+" Provides tab-completion for all file-related tasks
+set path+=**
+" Display all matching files when we tab complete
+set wildmenu
+
+
+
+" FILE BROWSING:
+
+" Tweaks for browsing
+let g:netrw_banner=0        " disable annoying banner
+let g:netrw_browse_split=4  " open in prior window
+let g:netrw_altv=1          " open splits to the right
+let g:netrw_liststyle=3     " tree view
+let g:netrw_list_hide=netrw_gitignore#Hide()
+let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
+
+" NOW WE CAN:
+" - :edit a folder to open a file browser
+" - <CR>/v/t to open in an h-split/v-split/tab
+" - check |netrw-browse-maps| for more mappings
+
+
+
+" SNIPPETS:
+
+" Read an empty HTML template and move cursor to title
+nnoremap ,html :-1read $HOME/.vim/.skeleton.html<CR>3jwf>a
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""""""""""""""""""""""""""""""
+" filetype specific parameters
+"""""""""""""""""""""""""""""""
+" sh
+"autocmd FileType sh :setlocal sw=4 ts=4 sts=4
+
+
+"""""""""""""""""""""""""""""""
+" Key binding
+"""""""""""""""""""""""""""""""
+set pastetoggle=<F10>
+
+
+
+
+
+
+function! InitializeDirectories()
+  let separator = "."
+  let parent = $HOME 
+  let prefix = '.vim'
+  let dir_list = { 
+			  \ 'backup': 'backupdir', 
+			  \ 'views': 'viewdir', 
+			  \ 'swap': 'directory', 
+			  \ 'undo': 'undodir' }
+
+  for [dirname, settingname] in items(dir_list)
+	  let directory = parent . '/' . prefix . dirname . "/"
+	  if exists("*mkdir")
+		  if !isdirectory(directory)
+			  call mkdir(directory)
+		  endif
+	  endif
+	  if !isdirectory(directory)
+		  echo "Warning: Unable to create backup directory: " . directory
+		  echo "Try: mkdir -p " . directory
+	  else  
+          let directory = substitute(directory, " ", "\\\\ ", "")
+          exec "set " . settingname . "=" . directory
+	  endif
+  endfor
+endfunction
+call InitializeDirectories() 
+
+
+
+
+
+
+
+endif

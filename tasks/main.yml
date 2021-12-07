@@ -1,0 +1,31 @@
+---
+# tasks file for ansible-role-landir.tmux_vim
+- name: Update apt cache (Debian).
+  apt: update_cache=true cache_valid_time=86400
+  when: ansible_os_family == 'Debian'
+
+- name: Install tmux
+  apt:
+    name:
+      - curl
+      - exuberant-ctags
+      - git
+      - tmux
+      - terminator
+      - universal-ctags
+      - vim
+      - xclip
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Template for .tmux.conf
+  template:
+    src: "{{ tmux_conf_src }}"
+    dest: "{{ tmux_conf_dest }}"
+  become: false
+
+- name: Template for .vimrc
+  template:
+    src: "{{ vim_vimrc_src }}"
+    dest: "{{ vim_vimrc_dest }}"
+  become: false

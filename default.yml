@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: true
+  gather_facts: true
+  roles:
+    - ansible-role-landir.tmux_vim
+  vars:
+    - usuario: "landir"
+    - vim_user_home: "/home/{{ usuario }}"
+    - tmux_user_home: "/home/{{ usuario }}"
